@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "cryptils"
-version = "0.1.0b2"
-description = "A simple python utility library for representing cryptocurrency amounts"
+name = "monetils"
+version = "0.2.0"
+description = "A simple python utility library for representing monetary amounts"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.11"
@@ -20,14 +20,14 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-test = ["pydantic>=2.0", "pytest>=8.0", "pytest-cov>=4.0", "tox>=4.0"]
+test = ["pytest>=8.0", "pytest-cov>=4.0", "tox>=4.0"]
 
 [project.urls]
-Homepage = "https://github.com/seba3c/cryptils"
-Repository = "https://github.com/seba3c/cryptils"
+Homepage = "https://github.com/seba3c/monetils"
+Repository = "https://github.com/seba3c/monetils"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/cryptils"]
+packages = ["src/monetils"]
 
 [tool.ruff]
 target-version = "py311"
@@ -63,7 +63,7 @@ quote-style = "double"
 indent-style = "space"
 
 [tool.coverage.run]
-source = ["src/cryptils"]
+source = ["src/monetils"]
 
 [tool.coverage.report]
 fail_under = 90
@@ -72,7 +72,6 @@ skip_covered = false
 
 [dependency-groups]
 dev = [
-    "pydantic>=2.0",
     "pre-commit>=3.0",
     "pytest>=8.0",
     "pytest-cov>=4.0",

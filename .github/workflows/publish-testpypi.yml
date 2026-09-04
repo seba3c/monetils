@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/cryptils
+      url: https://test.pypi.org/p/monetils
     permissions:
       id-token: write
     steps:

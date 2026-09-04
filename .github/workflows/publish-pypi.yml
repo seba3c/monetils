@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/cryptils
+      url: https://pypi.org/p/monetils
     permissions:
       id-token: write
     steps:
