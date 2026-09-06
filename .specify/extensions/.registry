@@ -18,6 +18,20 @@
       },
       "registered_skills": [],
       "installed_at": "2026-09-04T22:24:37.925130+00:00"
+    },
+    "version": {
+      "version": "1.0.0",
+      "source": "local",
+      "manifest_hash": "sha256:29dca37deda72adb8f537c511c62e53995cbac720148c9c86765916eb11d3683",
+      "enabled": true,
+      "priority": 10,
+      "registered_commands": {
+        "claude": [
+          "speckit.version.bump"
+        ]
+      },
+      "registered_skills": [],
+      "installed_at": "2026-09-06T14:11:23.918595+00:00"
     }
   }
 }

@@ -1,5 +1,6 @@
 installed:
 - git
+- version
 settings:
   auto_execute_hooks: true
 hooks:
@@ -130,6 +131,13 @@ hooks:
     description: Auto-commit after task generation
     condition: null
   after_implement:
+  - extension: version
+    command: speckit.version.bump
+    enabled: true
+    optional: false
+    priority: 10
+    description: Bump project version across sync points after implementation
+    condition: null
   - extension: git
     command: speckit.git.commit
     enabled: true

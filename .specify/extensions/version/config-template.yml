@@ -1,0 +1,18 @@
+# Version Bump Workflow Extension Configuration
+# Copied to .specify/extensions/version/version-config.yml on install
+
+# Auto-bump before/after core commands.
+# Set "default" to enable for all commands, then override per-command.
+# Each key is a bool. When enabled for an event, the agent will interactively
+# ask the user for the new version (see speckit.version.bump) whenever that
+# hook fires; when disabled, the hook fires per extensions.yml wiring but the
+# command no-ops immediately with no prompt and no file changes.
+auto_bump:
+  default: false
+  after_implement:
+    enabled: true
+
+# Whether to run `uv lock` after updating pyproject.toml / __init__.py so
+# uv.lock stays consistent with the new version. If `uv` is not installed,
+# this step is skipped with a warning regardless of this setting.
+run_uv_lock: true
