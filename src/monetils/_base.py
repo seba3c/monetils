@@ -2,9 +2,14 @@
 
 from dataclasses import dataclass
 from decimal import ROUND_HALF_EVEN, Decimal
-from typing import ClassVar, Self
+from typing import TYPE_CHECKING, ClassVar, Self
 
 from monetils._errors import CurrencyMismatchError
+
+if TYPE_CHECKING:
+    from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
+    from pydantic.json_schema import JsonSchemaValue
+    from pydantic_core import CoreSchema
 
 _Number = int | float | Decimal
 
@@ -148,3 +153,54 @@ class _Currency:
         amount = Decimal(self.raw) / Decimal(str(scalar))
         new_raw = int(amount.quantize(Decimal(1), rounding=ROUND_HALF_EVEN))
         return type(self).from_raw(new_raw)
+
+    @classmethod
+    def _pydantic_validate(cls, value: object) -> Self:
+        """Validate a Pydantic field value into an instance of this currency class.
+
+        A same-class instance passes through unchanged (full precision preserved). A
+        different currency's instance is rejected before it ever reaches the
+        constructor, since `str()` on a `_Currency` instance returns a plain numeric
+        string that `Decimal(str(value))` would otherwise silently accept.
+        """
+        if isinstance(value, cls):
+            return value
+        if isinstance(value, _Currency):
+            msg = f"Expected a {cls.__name__} amount, got a {type(value).__name__} amount"
+            raise ValueError(msg)
+        try:
+            return cls(value)  # type: ignore[arg-type]
+        except (TypeError, ValueError, ArithmeticError) as exc:
+            msg = f"Cannot interpret {value!r} as a {cls.__name__} amount"
+            raise ValueError(msg) from exc
+
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls, _source_type: object, _handler: "GetCoreSchemaHandler"
+    ) -> "CoreSchema":
+        """Register this class as a Pydantic v2 custom field type.
+
+        `pydantic_core` is imported here, inside the method body, rather than at
+        module scope: this method is only ever called by Pydantic itself, for a
+        consumer who is already building a `pydantic.BaseModel` (and therefore
+        already has `pydantic`/`pydantic_core` installed as their own dependency).
+        Importing it lazily keeps `monetils` itself free of any runtime dependency
+        on Pydantic.
+        """
+        from pydantic_core import core_schema
+
+        return core_schema.no_info_plain_validator_function(
+            cls._pydantic_validate,
+            serialization=core_schema.plain_serializer_function_ser_schema(str, when_used="json"),
+        )
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, _schema: "CoreSchema", handler: "GetJsonSchemaHandler"
+    ) -> "JsonSchemaValue":
+        """Describe this class as a plain string in generated JSON Schema."""
+        from pydantic_core import core_schema
+
+        json_schema = handler(core_schema.str_schema())
+        json_schema["examples"] = [str(cls(1))]
+        return json_schema

@@ -12,6 +12,9 @@ class USD(_Currency):
     Constructed directly in whole USD (`USD(1)` is 1 USD) or via a per-unit classmethod
     (`USD.cent(...)`). Stored internally at cent precision; `str()` formats to 2 decimal
     places.
+
+    Usable directly as a Pydantic v2 model field (e.g. `amount: USD`) with no wrapper
+    type required; requires the consumer to have `pydantic` installed themselves.
     """
 
     base_unit = "USD"

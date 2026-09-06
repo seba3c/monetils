@@ -73,6 +73,30 @@ msat_value = one_btc.to("msat")
 BTC.msat(msat_value) == one_btc  # True — lossless round trip
 ```
 
+### Pydantic support
+
+`BTC` and `USD` work directly as [Pydantic v2](https://docs.pydantic.dev/) model fields — no
+wrapper type needed. This requires `pydantic>=2.0,<3` to be installed in your own project;
+`monetils` does not depend on it (it stays a zero-runtime-dependency library).
+
+```python
+from pydantic import BaseModel
+from monetils import BTC, USD
+
+class Invoice(BaseModel):
+    price: USD
+    fee: BTC | None = None
+
+# Accepts a plain number/string, or an existing BTC/USD instance
+invoice = Invoice(price=19.99, fee="0.5")
+
+invoice.model_dump()        # {"price": USD(19.99), "fee": BTC(0.5)} — instances, unchanged
+invoice.model_dump_json()   # '{"price":"19.99","fee":"0.50000000"}' — the same str() convention
+Invoice.model_json_schema() # describes price/fee as JSON string properties
+
+# Invalid input (wrong currency, unparseable value) raises a standard pydantic.ValidationError
+```
+
 ## License
 
 This project is licensed under the terms of the [MIT](./LICENSE) license.
