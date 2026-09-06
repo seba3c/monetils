@@ -13,6 +13,9 @@ class BTC(_Currency):
     (`BTC.mBTC(...)`, `BTC.sat(...)`, `BTC.msat(...)`). Stored internally at millisatoshi
     precision (its finest recognized unit); `str()` formats to 8 decimal places (satoshi,
     its finest unit that settles on-chain).
+
+    Usable directly as a Pydantic v2 model field (e.g. `amount: BTC`) with no wrapper
+    type required; requires the consumer to have `pydantic` installed themselves.
     """
 
     base_unit = "BTC"
